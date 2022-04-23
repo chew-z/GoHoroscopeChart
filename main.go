@@ -52,6 +52,7 @@ func main() {
 	router.GET("/", PrintHoroscope)
 	router.GET("/radix", printRadix)
 	router.GET("/transit", printTransit)
+	router.GET("/animate", printTransit)
 	// router.Run()
 	server.ListenAndServe()
 }

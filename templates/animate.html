@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Animated transit</title>
+        <style>
+            #paper {
+                background: #eee;
+            }
+
+            svg {
+                background: #aaa;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="paper"></div>
+
+        <script src="astrochart.min.js"></script>
+        <script type="text/javascript">
+            var dataRadix = {
+                planets: {
+            {{range .PlanetsNow }}
+                    {{ .Name }}: [{{ .Position }}],
+            {{end}}
+
+                },
+                cusps:  {{ .HousesNow }},
+            }
+
+            var dataTransit = {
+                planets: {
+            {{range .PlanetsThen }}
+                    {{ .Name }}: [{{ .Position }}],
+            {{end}}
+                },
+                cusps:  {{ .HousesThen }},
+            }
+
+            var animateToData = {
+                planets: {
+            {{range .PlanetsThen }}
+                    {{ .Name }}: [{{ .Position }}],
+            {{end}}
+                },
+                cusps:  {{ .HousesThen }},
+            }
+
+            window.onload = function () {
+                var chart = new astrology.Chart('paper', 800, 800, { MARGIN: 100 })
+                var radix = chart.radix(dataRadix)
+                var transit = radix.transit(dataTransit)
+
+                // data, duration in seconds, isReverse, callback
+                transit.animate(animateToData, 6, false, function () {
+                    console.log('Animation finished.')
+                })
+            }
+        </script>
+    </body>
+</html>

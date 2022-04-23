@@ -118,7 +118,7 @@ func printTransit(c *gin.Context) {
 
 	c.HTML(
 		http.StatusOK,
-		"transit.html",
+		"animate.html",
 		gin.H{
 			"Now":         Now,
 			"Then":        Then,
@@ -128,7 +128,7 @@ func printTransit(c *gin.Context) {
 			"HousesThen":  Haus2,
 			"Ascendant":   AscNow,
 			"Mc":          McNow,
-			"title":       "transit",
+			"title":       "animate",
 		},
 	)
 }
