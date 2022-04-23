@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Horoscope {{ .Now }}</title>
+        <style>
+            #paper {
+                background: #eee;
+            }
+            svg {
+                background: #aaa;
+            }
+        </style>
+    </head>
+    <body>
+        <ul>
+            <li>Horoscope for: {{ .Now }}</li>
+            <li>{{ .Ascendant }}</li>
+        </ul>
+        <div id="paper"></div>
+        <div id="table2">
+            <table border="1" frame="void" rules="rows" width="800">
+                {{ range .T2 }}
+                <tr>
+                    <td width="15%">{{ .Planet }}</td>
+                    <td width="10%">{{ .House }}</td>
+                    <td width="10%">{{ .Position }}</td>
+                    <td width="15%">{{ .Sign }}</td>
+                    <td width="50%">
+                        {{ range .Aspects }}
+                        <p>{{ . }}</p>
+                        {{ end }}
+                    </td>
+                </tr>
+                {{ end }}
+            </table>
+        </div>
+        <br />
+        <br />
+
+        <div id="table1">
+            <table border="1" frame="void" rules="rows" width="800">
+                {{ range .T1 }}
+                <tr>
+                    <td width="25%">{{ .Name }}</td>
+                    <td width="15%">{{ .Position }}</td>
+                    <td width="10%">{{ .Cusp }}</td>
+                    <td width="50%">{{ .Sign}}</td>
+                </tr>
+                {{ end }}
+            </table>
+        </div>
+
+        <script src="astrochart.min.js"></script>
+        <script type="text/javascript">
+            var data = {
+                planets: {
+            {{range .Planets }}
+                    {{ .Name }}: [{{ .Position }}],
+            {{end}}
+                },
+                cusps:  {{ .Houses }},
+            }
+
+            window.onload = function () {
+                var chart = new astrology.Chart('paper', 800, 800, { MARGIN: 100, SYMBOL_SCALE: 0.8 })
+                var radix = chart.radix(data)
+
+                // Aspect calculation
+                // default is planet to planet, but it is possible add some important points:
+                radix.addPointsOfInterest({ As: [ {{ .Asc }} ], Mc: [ {{ .Mc }} ] })
+                radix.aspects()
+            }
+        </script>
+    </body>
+</html>

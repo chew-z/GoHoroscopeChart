@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Radix</title>
+        <style>
+            #paper {
+                background: #eee;
+            }
+            svg {
+                background: #aaa;
+            }
+        </style>
+    </head>
+    <body>
+        <ul>
+            <li>Horoscope for: {{ .Now }}</li>
+        </ul>
+        <div id="paper"></div>
+
+        <script src="astrochart.min.js"></script>
+        <script type="text/javascript">
+            var data = {
+                planets: {
+            {{range .Planets }}
+                    {{ .Name }}: [{{ .Position }}],
+            {{end}}
+                },
+                cusps:  {{ .Houses }},
+            }
+
+            window.onload = function () {
+                var chart = new astrology.Chart('paper', 800, 800, { MARGIN: 100, SYMBOL_SCALE: 0.8 })
+                var radix = chart.radix(data)
+
+                // Aspect calculation
+                // default is planet to planet, but it is possible add some important points:
+                radix.addPointsOfInterest({ As: [ {{ .Ascendant }} ], Mc: [ {{ .Mc }} ] })
+                radix.aspects()
+            }
+        </script>
+    </body>
+</html>
+            }
+        </script>
+    </body>
+</html>
