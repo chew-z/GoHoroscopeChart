@@ -3,3 +3,4 @@
 go.sum
 *.bak
 bin/**
+*.log

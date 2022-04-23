@@ -24,7 +24,7 @@
                 <tr>
                     <td width="15%">{{ .Planet }}</td>
                     <td width="10%">{{ .House }}</td>
-                    <td width="10%">{{ .Position }}</td>
+                    <td width="10%">{{ .Position }}&deg;</td>
                     <td width="15%">{{ .Sign }}</td>
                     <td width="50%">
                         {{ range .Aspects }}
@@ -43,8 +43,8 @@
                 {{ range .T1 }}
                 <tr>
                     <td width="25%">{{ .Name }}</td>
-                    <td width="15%">{{ .Position }}</td>
-                    <td width="10%">{{ .Cusp }}</td>
+                    <td width="15%">{{ .Position }}&deg;</td>
+                    <td width="10%">{{ .Cusp }}&deg;</td>
                     <td width="50%">{{ .Sign}}</td>
                 </tr>
                 {{ end }}

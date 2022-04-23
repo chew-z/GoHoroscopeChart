@@ -31,7 +31,6 @@ type PlanetPrint struct {
 }
 
 func printRadix(c *gin.Context) {
-	houseSystem = "Placidus"
 	now := time.Now()
 	Now := fmt.Sprintf("\n%s - lat: %.2f, lon: %.2f\n", now.In(location).Format(time.RFC822), lat, lon)
 	var Haus []int
@@ -71,8 +70,6 @@ func printRadix(c *gin.Context) {
 }
 
 func printTransit(c *gin.Context) {
-
-	houseSystem = "Placidus"
 	var Haus1, Haus2 []int
 	var Planeta1, Planeta2 []Planet
 	var AscNow, McNow float64
@@ -134,7 +131,6 @@ func printTransit(c *gin.Context) {
 }
 
 func PrintHoroscope(c *gin.Context) {
-	houseSystem = "Placidus"
 	var Haus []int
 	var Planeta []Planet
 	var Asc, Mc float64
