@@ -1,7 +1,6 @@
 package main
 
 import (
-	"net/http"
 	"os"
 	"time"
 
@@ -25,19 +24,8 @@ func init() {
 
 func main() {
 	defer swephgo.Close()
-	// router := gin.Default()
-	router := gin.New() // gin.Default() installs gin.Recovery() so use gin.New() instead
-	// A zero/default http.Server, like the one used by the package-level helpers
-	// http.ListenAndServe and http.ListenAndServeTLS, comes with no timeouts.
-	// You don't want that.
-	server := &http.Server{
-		Addr:              ":8080",
-		Handler:           router,
-		ReadHeaderTimeout: 3 * time.Second,
-		ReadTimeout:       10 * time.Second,
-		WriteTimeout:      25 * time.Second,
-		IdleTimeout:       90 * time.Second,
-	}
+	//
+	router := gin.Default()
 	// Process the templates at the start so that they don't have to be loaded
 	// from the disk again. This makes serving HTML pages very fast.
 	router.LoadHTMLGlob("templates/*")
@@ -53,7 +41,5 @@ func main() {
 			"message": "pong",
 		})
 	})
-
-	// router.Run()
-	server.ListenAndServe()
+	router.Run()
 }

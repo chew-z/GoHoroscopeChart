@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -137,9 +138,19 @@ func PrintHoroscope(c *gin.Context) {
 	var T1 []HousePrint
 	var T2 []PlanetPrint
 	var Ascendant string
-	now := time.Now()
-	Now := fmt.Sprintf("\n%s - lat: %.2f, lon: %.2f\n", now.In(location).Format(time.RFC822), lat, lon)
-	if Cusps, Asmc, err := Cusps(now, lat, lon, houseSystem); err != nil {
+	when := time.Now()
+	latitude := c.DefaultQuery("lat", fmt.Sprintf("%f", lat))
+	longitude := c.DefaultQuery("lon", fmt.Sprintf("%f", lon))
+	lat, _ = strconv.ParseFloat(latitude, 64)
+	lon, _ = strconv.ParseFloat(longitude, 64)
+	if unix := c.Query("unix"); unix != "" {
+		if i, err := strconv.ParseInt(unix, 10, 64); err == nil {
+			when = time.Unix(i, 0)
+		}
+	}
+	When := fmt.Sprintf("\n%s - lat: %.2f, lon: %.2f\n", when.In(location).Format(time.RFC822), lat, lon)
+
+	if Cusps, Asmc, err := Cusps(when, lat, lon, houseSystem); err != nil {
 		log.Println(err.Error())
 		return
 	} else {
@@ -158,7 +169,7 @@ func PrintHoroscope(c *gin.Context) {
 			T1 = append(T1, r1)
 			// log.Printf("%s\t%.2f\t%.2f\t%s\n", h.Number, h.DegreeUt, h.Degree, h.SignName)
 		}
-		B := Bodies(now)
+		B := Bodies(when)
 		// table2.AddHeaders("Planet", "Position", "House", "Sign", "Aspects")
 		for i, b1 := range B {
 			var r2 PlanetPrint
@@ -186,7 +197,7 @@ func PrintHoroscope(c *gin.Context) {
 		http.StatusOK,
 		"main.html",
 		gin.H{
-			"Now":       Now,
+			"Now":       When,
 			"Ascendant": Ascendant,
 			"Planets":   Planeta,
 			"Houses":    Haus,
