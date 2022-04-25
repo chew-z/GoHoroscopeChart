@@ -10,9 +10,9 @@ import (
 )
 
 var (
-	loc         string
 	city        = os.Getenv("CITY")
 	houseSystem = os.Getenv("HOUSE_SYSTEM")
+	loc         string
 	location    *time.Location
 	swisspath   = os.Getenv("SWISSPATH")
 )

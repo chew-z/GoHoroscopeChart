@@ -4,9 +4,11 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"time"
 
+	"github.com/Songmu/go-httpdate"
 	"github.com/gin-gonic/gin"
 	_ "github.com/joho/godotenv/autoload"
 )
@@ -32,13 +34,26 @@ type PlanetPrint struct {
 }
 
 func printRadix(c *gin.Context) {
-	now := time.Now()
-	Now := fmt.Sprintf("\n%s - lat: %.2f, lon: %.2f\n", now.In(location).Format(time.RFC822), lat, lon)
 	var Haus []int
 	var Planeta []Planet
 	var Asc, Mc float64
-
-	if Cusps, Asmc, err := Cusps(now, lat, lon, houseSystem); err != nil {
+	when := time.Now()
+	latitude := c.DefaultQuery("lat", os.Getenv("LATITUDE"))
+	longitude := c.DefaultQuery("lon", os.Getenv("LONGITUDE"))
+	lat, _ = strconv.ParseFloat(latitude, 64)
+	lon, _ = strconv.ParseFloat(longitude, 64)
+	if t := c.Query("t"); t != "" {
+		if t1, err := httpdate.Str2Time(t, location); err == nil {
+			when = t1
+		}
+	}
+	if u := c.Query("u"); u != "" {
+		if i, err := strconv.ParseInt(u, 10, 64); err == nil {
+			when = time.Unix(i, 0)
+		}
+	}
+	When := fmt.Sprintf("\n%s - lat: %.2f, lon: %.2f\n", when.In(location).Format(time.RFC822), lat, lon)
+	if Cusps, Asmc, err := Cusps(when, lat, lon, houseSystem); err != nil {
 		log.Println(err.Error())
 		return
 	} else {
@@ -48,7 +63,7 @@ func printRadix(c *gin.Context) {
 		for _, h := range *H {
 			Haus = append(Haus, int(h.DegreeUt))
 		}
-		B := Bodies(now)
+		B := Bodies(when)
 		for i, b1 := range B {
 			var pl Planet
 			pl.Name = getPlanetName(bodies[i])
@@ -64,7 +79,7 @@ func printRadix(c *gin.Context) {
 			"Houses":    Haus,
 			"Ascendant": Asc,
 			"Mc":        Mc,
-			"Now":       Now,
+			"Now":       When,
 			"title":     "radix",
 		},
 	)
@@ -74,9 +89,25 @@ func printTransit(c *gin.Context) {
 	var Haus1, Haus2 []int
 	var Planeta1, Planeta2 []Planet
 	var AscNow, McNow float64
+	latitude := c.DefaultQuery("lat", os.Getenv("LATITUDE"))
+	longitude := c.DefaultQuery("lon", os.Getenv("LONGITUDE"))
+	lat, _ = strconv.ParseFloat(latitude, 64)
+	lon, _ = strconv.ParseFloat(longitude, 64)
 
 	now := time.Now()
 	Now := fmt.Sprintf("\n%s - lat: %.2f, lon: %.2f\n", now.In(location).Format(time.RFC822), lat, lon)
+	when := time.Now().AddDate(0, 0, 7)
+	if t := c.Query("t"); t != "" {
+		if t1, err := httpdate.Str2Time(t, location); err == nil {
+			when = t1
+		}
+	}
+	if u := c.Query("u"); u != "" {
+		if i, err := strconv.ParseInt(u, 10, 64); err == nil {
+			when = time.Unix(i, 0)
+		}
+	}
+	Then := fmt.Sprintf("\n%s - lat: %.2f, lon: %.2f\n", when.In(location).Format(time.RFC822), lat, lon)
 	if Cusps, Asmc, err := Cusps(now, lat, lon, houseSystem); err != nil {
 		log.Println(err.Error())
 		return
@@ -95,8 +126,6 @@ func printTransit(c *gin.Context) {
 			Planeta1 = append(Planeta1, pl)
 		}
 	}
-	when := time.Date(2022, time.Month(4), 30, 22, 27, 55, 0, time.Local)
-	Then := fmt.Sprintf("\n%s - lat: %.2f, lon: %.2f\n", when.In(location).Format(time.RFC822), lat, lon)
 	if Cusps, _, err := Cusps(when, lat, lon, houseSystem); err != nil {
 		log.Println(err.Error())
 		return
@@ -139,12 +168,17 @@ func PrintHoroscope(c *gin.Context) {
 	var T2 []PlanetPrint
 	var Ascendant string
 	when := time.Now()
-	latitude := c.DefaultQuery("lat", fmt.Sprintf("%f", lat))
-	longitude := c.DefaultQuery("lon", fmt.Sprintf("%f", lon))
+	latitude := c.DefaultQuery("lat", os.Getenv("LATITUDE"))
+	longitude := c.DefaultQuery("lon", os.Getenv("LONGITUDE"))
 	lat, _ = strconv.ParseFloat(latitude, 64)
 	lon, _ = strconv.ParseFloat(longitude, 64)
-	if unix := c.Query("unix"); unix != "" {
-		if i, err := strconv.ParseInt(unix, 10, 64); err == nil {
+	if t := c.Query("t"); t != "" {
+		if t1, err := httpdate.Str2Time(t, location); err == nil {
+			when = t1
+		}
+	}
+	if u := c.Query("u"); u != "" {
+		if i, err := strconv.ParseInt(u, 10, 64); err == nil {
 			when = time.Unix(i, 0)
 		}
 	}
