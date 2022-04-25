@@ -4,3 +4,4 @@ go.sum
 *.bak
 bin/**
 *.log
+favicon.ico
