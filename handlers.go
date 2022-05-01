@@ -258,6 +258,7 @@ func printCycles(c *gin.Context) {
 		}
 	}
 	page := components.NewPage()
+	page.Initialization.PageTitle = fmt.Sprintf("Planet cycles %s [%dy%dm]", when.Format("Jan _2, 06"), years, months)
 	page.AddCharts(
 		innerPositionChart(when, years, months),
 		outerPositionChart(when, years, months),
