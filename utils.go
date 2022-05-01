@@ -4,8 +4,123 @@ import (
 	"math"
 	"time"
 
+	"github.com/go-echarts/go-echarts/v2/charts"
+	"github.com/go-echarts/go-echarts/v2/opts"
 	"github.com/mshafiee/swephgo"
 )
+
+/* charts */
+
+func innerPositionChart(startTime time.Time, years int, months int) *charts.Line {
+	lineChart := charts.NewLine()
+	var x []string
+	var z, m, v, u []opts.LineData
+	start := nod(startTime)
+	end := start.AddDate(years, months, 0)
+	ipl := swephgo.SeMoon
+	for d := start; d.After(end) == false; d = d.AddDate(0, 0, 1) {
+		x = append(x, d.In(location).Format("Jan _2, 06"))
+		waldo, _ := Waldo(d, ipl, swephgo.SeflgSwieph+swephgo.SeflgRadians)
+		z = append(z, opts.LineData{Value: math.Cos(waldo[0])})
+		waldo, _ = Waldo(d, ipl+1, swephgo.SeflgSwieph+swephgo.SeflgRadians)
+		m = append(m, opts.LineData{Value: math.Cos(waldo[0])})
+		waldo, _ = Waldo(d, ipl+2, swephgo.SeflgSwieph+swephgo.SeflgRadians)
+		v = append(v, opts.LineData{Value: math.Cos(waldo[0])})
+		waldo, _ = Waldo(d, ipl+3, swephgo.SeflgSwieph+swephgo.SeflgRadians)
+		u = append(u, opts.LineData{Value: math.Cos(waldo[0])})
+	}
+
+	lineChart.SetGlobalOptions(
+		charts.WithTitleOpts(opts.Title{
+			Title: "Moon - Mercury - Venus - Mars Position",
+		}),
+		charts.WithYAxisOpts(opts.YAxis{
+			Scale: true,
+			Min:   -1.0,
+			Max:   1.0,
+		}),
+		charts.WithDataZoomOpts(opts.DataZoom{
+			Type:       "slider",
+			XAxisIndex: []int{0},
+		}),
+		charts.WithTooltipOpts(opts.Tooltip{
+			Show: true,
+		}),
+		charts.WithToolboxOpts(opts.Toolbox{
+			Show:  true,
+			Right: "20%",
+			Feature: &opts.ToolBoxFeature{
+				SaveAsImage: &opts.ToolBoxFeatureSaveAsImage{
+					Show:  true,
+					Type:  "png",
+					Title: "save as image",
+				},
+			}},
+		),
+	)
+	lineChart.SetXAxis(x).AddSeries("Moon", z)
+	lineChart.SetXAxis(x).AddSeries("Mercury", m)
+	lineChart.SetXAxis(x).AddSeries("Venus", v)
+	lineChart.SetXAxis(x).AddSeries("Mars", u)
+	return lineChart
+}
+
+func outerPositionChart(startTime time.Time, years int, months int) *charts.Line {
+	lineChart := charts.NewLine()
+	var x []string
+	var j, s, u, n, p []opts.LineData
+	start := nod(startTime)
+	end := start.AddDate(years, months, 0)
+	ipl := swephgo.SeJupiter
+	for d := start; d.After(end) == false; d = d.AddDate(0, 0, 1) {
+		x = append(x, d.In(location).Format("Jan _2, 06"))
+		waldo, _ := Waldo(d, ipl, swephgo.SeflgSwieph+swephgo.SeflgRadians)
+		j = append(j, opts.LineData{Value: math.Cos(waldo[0])})
+		waldo, _ = Waldo(d, ipl+1, swephgo.SeflgSwieph+swephgo.SeflgRadians)
+		s = append(s, opts.LineData{Value: math.Cos(waldo[0])})
+		waldo, _ = Waldo(d, ipl+2, swephgo.SeflgSwieph+swephgo.SeflgRadians)
+		u = append(u, opts.LineData{Value: math.Cos(waldo[0])})
+		waldo, _ = Waldo(d, ipl+3, swephgo.SeflgSwieph+swephgo.SeflgRadians)
+		n = append(n, opts.LineData{Value: math.Cos(waldo[0])})
+		waldo, _ = Waldo(d, ipl+4, swephgo.SeflgSwieph+swephgo.SeflgRadians)
+		p = append(p, opts.LineData{Value: math.Cos(waldo[0])})
+	}
+
+	lineChart.SetGlobalOptions(
+		charts.WithTitleOpts(opts.Title{
+			Title: "Jupiter - Saturn - Uranus - Neptune - Pluto",
+		}),
+		charts.WithYAxisOpts(opts.YAxis{
+			Scale: true,
+			Min:   -1.0,
+			Max:   1.0,
+		}),
+		charts.WithDataZoomOpts(opts.DataZoom{
+			Type:       "slider",
+			XAxisIndex: []int{0},
+		}),
+		charts.WithTooltipOpts(opts.Tooltip{
+			Show: true,
+		}),
+		charts.WithToolboxOpts(opts.Toolbox{
+			Show:  true,
+			Right: "20%",
+			Feature: &opts.ToolBoxFeature{
+				SaveAsImage: &opts.ToolBoxFeatureSaveAsImage{
+					Show:  true,
+					Type:  "png",
+					Title: "save as image",
+				},
+			}},
+		),
+	)
+	lineChart.SetXAxis(x).AddSeries("Jupiter", j)
+	lineChart.SetXAxis(x).AddSeries("Saturn", s)
+	lineChart.SetXAxis(x).AddSeries("Uranus", u)
+	lineChart.SetXAxis(x).AddSeries("Neptune", n)
+	lineChart.SetXAxis(x).AddSeries("Pluto", p)
+	return lineChart
+}
 
 /* general helpers */
 

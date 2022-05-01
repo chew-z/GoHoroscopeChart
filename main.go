@@ -32,8 +32,9 @@ func main() {
 	router.LoadHTMLGlob("templates/*")
 	router.StaticFile("/favicon.ico", "./static/favicon.ico") // some clients don't read webmanifest
 	router.StaticFile("/astrochart.min.js", "./static/astrochart.min.js")
-	router.GET("/", PrintHoroscope)
+	router.GET("/", printHoroscope)
 	router.GET("/radix", printRadix)
 	router.GET("/transit", printTransit)
+	router.GET("/cycles", printCycles)
 	router.Run(":8080")
 }

@@ -10,6 +10,7 @@ import (
 
 	"github.com/Songmu/go-httpdate"
 	"github.com/gin-gonic/gin"
+	"github.com/go-echarts/go-echarts/v2/components"
 	_ "github.com/joho/godotenv/autoload"
 )
 
@@ -160,7 +161,7 @@ func printTransit(c *gin.Context) {
 	)
 }
 
-func PrintHoroscope(c *gin.Context) {
+func printHoroscope(c *gin.Context) {
 	var Haus []int
 	var Planeta []Planet
 	var Asc, Mc float64
@@ -243,4 +244,23 @@ func PrintHoroscope(c *gin.Context) {
 		},
 	)
 
+}
+
+func printCycles(c *gin.Context) {
+	m := c.DefaultQuery("m", "1")
+	y := c.DefaultQuery("y", "1")
+	months, _ := strconv.Atoi(m)
+	years, _ := strconv.Atoi(y)
+	when := time.Now().AddDate(-years, -months, 0)
+	if t := c.Query("t"); t != "" {
+		if t1, err := httpdate.Str2Time(t, location); err == nil {
+			when = t1
+		}
+	}
+	page := components.NewPage()
+	page.AddCharts(
+		innerPositionChart(when, years, months),
+		outerPositionChart(when, years, months),
+	)
+	page.Render(c.Writer)
 }
