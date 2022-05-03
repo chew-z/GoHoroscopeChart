@@ -6,4 +6,4 @@ It is using [Swiss Ephemeris](https://www.astro.com/swisseph/swephprg.htm) under
 
 For CLI version check [GoHoroscope](https://github.com/chew-z/GoHoroscope).
 
-![plot](../images/horoscope.png)
+![Horoscope](images/horoscope.png)
